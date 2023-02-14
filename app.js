@@ -1,4 +1,4 @@
-const express = reuqire('express');
+const express = require('express');
 const app = express();
 const { ThermalPrinter, PrinterTypes, CharacterSet, BreakLine } = require('node-thermal-printer');
 
@@ -6,7 +6,7 @@ const port = '5000';
 app.listen(port, ()=> console.log("serve on broad!"))
 
 app.use(express.json());
-app.use('/', (req,res) => {
+app.use('/print', (req,res) => {
   res.send("hellow World!")
   const getStatus = async() => {
     let printer = new ThermalPrinter({
