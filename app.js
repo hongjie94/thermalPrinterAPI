@@ -7,11 +7,9 @@ app.listen(port, ()=> console.log("serve on broad!"))
 
 app.use(express.json());
 
-app.use('/', (req,res) => {
-  res.send("hello Home!")
-});
 
-app.use('/print', (req,res) => {
+
+app.use('/', (req,res) => {
   res.send("hellow World!")
   const getStatus = async() => {
     let printer = new ThermalPrinter({
