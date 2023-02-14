@@ -1,6 +1,14 @@
+const express = reuqire('express');
+const app = express();
 const { ThermalPrinter, PrinterTypes, CharacterSet, BreakLine } = require('node-thermal-printer');
 
-const getStatus = async() => {
+const port = '5000';
+app.listen(port, ()=> console.log("serve on broad!"))
+
+app.use(express.json());
+app.use('/', (req,res) => {
+  res.send("hellow World!")
+  const getStatus = async() => {
     let printer = new ThermalPrinter({
       type: PrinterTypes.EPSON,                                 // Printer type: EPSON: 'epson', TANCA: 'tanca', STAR: 'star'
       interface: 'tcp://192.168.0.201:9100',                    // Printer interface
@@ -15,15 +23,17 @@ const getStatus = async() => {
     let isConnected = await printer.isPrinterConnected();       
     console.log("read printer conection")
     console.log(isConnected);
-   if(isConnected) {
+  if(isConnected) {
       printer.print("Hello World");                               // Append text
       printer.beep();
       printer.raw(Buffer.from("Hello world"));
       printer.openCashDrawer();  
       printer.execute();
-   }else {
+  }else {
     console.log('not connect');
-   }
-}
-getStatus();
+  }
+  }
+  getStatus();
+});
+
 
