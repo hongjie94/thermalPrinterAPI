@@ -1,0 +1,3 @@
+# Thermal Printer API
+
+The API I have created serves as a bridge between my front-end POS system app and a thermal printer.The API connects a front-end POS system app to a thermal printer via TCP using Node.js, Express, CORS, and node-thermal-printer package. It provides endpoints for printing tasks and handles the connection and error handling. The front-end app makes HTTP requests to the endpoints.
