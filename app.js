@@ -1,4 +1,3 @@
-
 const { ThermalPrinter, PrinterTypes, CharacterSet, BreakLine } = require('node-thermal-printer');
 const cors = require('cors')
 const express = require('express');
@@ -14,6 +13,7 @@ const liveMode = "https://linspos.firebaseapp.com"
 app.options("*", cors({ origin: liveMode, optionsSuccessStatus: 200 }));
 app.use(cors({ origin: liveMode, optionsSuccessStatus: 200 }));
 
+// Initialize the printer
 let printer = new ThermalPrinter({
   type: PrinterTypes.TANCA,                                 
   interface: 'tcp://192.168.1.87:9100',                    
@@ -27,15 +27,18 @@ let printer = new ThermalPrinter({
   }
 });
 
+// Get printer status
 const getStatus = async() => {
   let isConnected = await printer.isPrinterConnected();      
   isConnected ? console.log("Thermal Printer is Connected! :)"): console.log("Thermal Printer Failed to Connect!!! :(");
 }
-
 getStatus();
 
+// Create recepit
 const printRecepit = async(orderNumber, orderArr, tax, subTotal, total, date, time) => {
-  printer.beep();                                             
+  printer.beep();  
+
+  // Restaurant name                                           
   printer.alignCenter(); 
   printer.bold(true);   
   printer.setTextSize(0,1);  
@@ -105,7 +108,7 @@ const printRecepit = async(orderNumber, orderArr, tax, subTotal, total, date, ti
   printer.newLine();
   printer.drawLine(); 
 
-  // Total session
+  // Total 
   printer.newLine();
   printer.setTextSize(1,1);
   printer.alignCenter();
@@ -113,7 +116,7 @@ const printRecepit = async(orderNumber, orderArr, tax, subTotal, total, date, ti
   printer.println(`Total:    $${total}`)
   printer.newLine();
  
-  // Thank you session
+  // Thank you 
   printer.setTextNormal(); 
   printer.bold(true);   
   printer.drawLine(); 
@@ -133,8 +136,7 @@ const printRecepit = async(orderNumber, orderArr, tax, subTotal, total, date, ti
   printer.drawLine(); 
   printer.bold(false); 
 
-
-  // Tip Guide session
+  // Tip Guide 
   printer.newLine(); 
   printer.tableCustom([                                      
     { text:`Tip Guide`, align:"CENTER", cols:17},
@@ -155,6 +157,7 @@ const printRecepit = async(orderNumber, orderArr, tax, subTotal, total, date, ti
   return execute;
 }
 
+// Api routes for printing recepit
 app.post("/sendRecepit", (req, res) => {   
 
   const orderNumber = req.body.orderNumber;
@@ -170,6 +173,7 @@ app.post("/sendRecepit", (req, res) => {
   res.send("ok");
 });
 
+// Api routes for open cash drawer
 app.post("/openCashDrawer", (req, res) => {   
   printer.openCashDrawer();  
   res.send("ok");
